@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: park
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: sa
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  parking-app:
+    build: .
+    ports:
+      - "3003:3003"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+volumes:
+  pgdata:
