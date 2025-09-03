@@ -33,7 +33,7 @@ class SpotService(
     return try {
       spotRepository.countByOccupied(true) * 100 / spotRepository.count().toInt()
     } catch (exception: Exception) {
-      throw SpotsNotAvailableException()
+      throw SpotGenericErrorException(exception)
     }
   }
 

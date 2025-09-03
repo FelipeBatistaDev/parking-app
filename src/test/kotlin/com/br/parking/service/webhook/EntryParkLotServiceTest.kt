@@ -2,15 +2,15 @@ package com.br.parking.service.webhook
 
 import com.br.parking.api.request.ParkLotRequest
 import com.br.parking.infrastructure.repository.parklot.ParkLotEntity
-import com.br.parking.mapper.ParkLotMapper
 import com.br.parking.service.ParkLotService
 import com.br.parking.service.SpotService
-import com.br.parking.service.chargefactory.TestCapacityResultFactory
 import com.br.parking.service.chargefactory.TestCapacityResultOutput
 import com.br.parking.shared.enums.EventTypeEnum
+import com.br.parking.shared.error.FullGarageException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.*
 import org.mockito.kotlin.argumentCaptor
 import java.math.BigDecimal
@@ -59,6 +59,26 @@ class EntryParkLotServiceTest {
     assertEquals(request.entryTime, savedEntity.parkedTime)
     assertEquals(request.eventType.status, savedEntity.status)
     assertEquals(testCapacityResult.charge, savedEntity.amountCharge)
+  }
+
+  @DisplayName("Deve barrar entrada se porcentagem for 100")
+  @Test
+  fun processEntryWithOccupiedPercentage100ThrowsException() {
+    // Arrange
+    val request = ParkLotRequest(
+      licensePlate = "DEF4567",
+      entryTime = LocalDateTime.now(),
+      exitTime = null,
+      latitude = "12.3456",
+      longitude = "65.4321",
+      eventType = EventTypeEnum.ENTRY
+    )
+
+    `when`(spotService.countPercentOccupiedSpots()).thenReturn(100)
+
+    assertThrows<FullGarageException> {
+      service.process(request)
+    }
   }
 
 

@@ -9,7 +9,7 @@ import com.br.parking.service.SectorService
 import com.br.parking.service.SpotService
 import com.br.parking.shared.enums.EventTypeEnum
 import com.br.parking.shared.enums.ParkLotStatusEnum
-import com.br.parking.shared.error.SectorNotFoundErrorException
+import com.br.parking.shared.error.FullGarageException
 import com.br.parking.shared.error.SpotsNotAvailableException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

@@ -6,6 +6,7 @@ import com.br.parking.service.ParkLotService
 import com.br.parking.service.SpotService
 import com.br.parking.service.chargefactory.TestCapacityResultFactory
 import com.br.parking.service.chargefactory.TestCapacityResultOutput
+import com.br.parking.shared.error.FullGarageException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -21,6 +22,10 @@ class EntryParkLotService(
 
     val parkLot = ParkLotMapper.toEntity(request)
     val percentageOccupied = spotService.countPercentOccupiedSpots()
+
+    if(percentageOccupied == 100)
+      throw FullGarageException()
+
     val testCapacityResult = chargeSelector(percentageOccupied)
 
     log.info("Porcentagem da garagem ocupada: {}, porcentagem aplicada: {}", percentageOccupied, testCapacityResult.charge )
